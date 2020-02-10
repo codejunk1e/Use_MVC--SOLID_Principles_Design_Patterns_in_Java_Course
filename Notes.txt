@@ -1,0 +1,137 @@
+#### Solid Principles
+
+"S" is for Single responsibility
+A class should do one thing, and do it well. It should only have one reason to change.
+
+"O" is for Open/closed principle
+A class should be open to extension, but closed to modification.
+
+"L" for Liskov substitutability
+Adding a subtype through inheritance should not break the existing code. I call this the "no surprises" principle. That is, if the system is working and I add a new class that is derived from another, the system should still work.
+
+"I" for Interface segregation
+Essentially the single responsibility principle, applied to interfaces.
+
+"D" is for Dependency inversion
+High-level classes shouldn't have to change when a low-level class is modified. High-level classes should define an abstraction that the lower-level class conforms to.
+
+
+
+#### MVC
+
+MVC is a software architecture approach. It divides the responsibilities of the system into three distinct parts:
+Model: The model holds the state information of the system.
+View: The view presents the model information to the user.
+Controller: The controller makes sure that user commands are executed correctly, modifying the appropriate model objects, and updating the view objects.
+
+### Course Card Game
+
+Gameplay specifics:
+   Create a standard 52 card deck.
+Enter player names. Limit the number of players to five.
+Shuffle the deck of cards.
+Deal one card to each player (face down).
+Flip over all player’s cards, showing what card they have.
+Check which player has the highest ranked card: Ace > King > Queen > Jack > 10 > . . . 2.
+If tied, winner is based on suit:
+Clubs > Spades > Hearts > Diamonds
+Show winning player name and card
+Put all cards back into the deck.
+Jump back to shuffle step.'
+
+This is a Use Case, Can be broken down to Use Case Diagrams and Class Diagram further if necessary. The model will be created first.
+
+
+#### How Do You Plan Out the Controller?
+The controller is responsible for the sequencing of user interactions. Looking at the game play, the sequence looks like:
+Create the deck.
+Enter player names.
+Shuffle the cards.
+Deal a card to each player.
+Flip over the cards.
+Evaluate the winner.
+Display the winner.
+Reconstitute the deck.
+
+The controller then needs to know which step you are on, and a valid input for that step.
+
+
+#### Our game Step
+Start the Game
+ The first step of any interaction is to instantiate the controller. The controller builds the core game objects. These are the deck, and an empty list of players. It also needs to know about the view. The view should be created elsewhere, and passed to the controller, rather than having the controller make its own.
+ Why do we need to have the view passed to the controller, instead of just making it?
+ Well, if you were to create a mobile version of this application, it would need different UI (view) elements. You'd then have to modify the controller to make them. It would violate the SOLID principles via the open/closed principle.
+ We'll look at this principle in more depth in Part 2.
+
+ ## Entering Model.Player Names
+ After every name, the controller adds the name to the list of players.
+
+ ## Indicating Name Entry is Complete
+ The controller tells the view to draw the game state, which refers to the current set of values from various objects. At this point, it only consists of one player.
+
+ ## Deal Cards
+ The controller shuffles the deck and then removes the top card and put it into a player’s hand. The controller then tells the view to draw the game state. It now consists of player names and a face-down card for each player.
+
+## Flip Over/Reveal Cards
+ The controller flips over each player’s card and then evaluates the winner. The controller tells the view to draw the game state, which now includes the name of the winning player. The cards are taken back from the player and put back into the deck.
+
+ ## Play Again
+ The controller returns to Step 3.
+
+ In our original implementation, the controller performs the "winner evaluation." If you are paying attention, that should trigger a SOLID violation alarm: the controller is now doing more that one thing! It is no longer just sequencing the interaction. It's also evaluating the rules. Oh-oh!
+ Make a note of this concession. Since we are changing the rules later, we'll deal with fixing it then by putting this evaluation logic into its own class.
+
+Remember that the view is both the user interface and the event generator. The controller calls the display methods of the view exclusively. Therefore you should look at what the controller is telling the view to show. But you don’t want the view accessing model information directly
+(this would violate single responsibility). So instead of passing in a player, you should only pass in a player’s name. It’s the minimum amount of data necessary to indicate that model (player) information at this time. The same thing goes for the playing card. You can pass it the rank and suit to display, rather than the entire PlayingCard.
+
+
+#### Example to work on...
+
+Create a pair of 20-sided dice.
+Players enter their name, plus their username.
+A moderator rolls another 20 sided die.
+All players roll their pair of dice.
+For each die that is higher than the moderator's die, a player scores one point.
+The first player to reach 10 points wins.
+
+STUPID stands for:
+Singleton
+Tight coupling
+Untestability
+Premature optimization
+Indescriptive naming
+Duplication
+
+#### Design Pattens
+Patterns are usually described with four attributes:
+Name
+Problem
+Solution
+Consequences
+
+The name allows you to describe the situation at a high level. It gives a universal language.
+The problem indicates the situation where the pattern can be applied. This is the toughest part - being able to recognize the problem at hand and picking the correct pattern. Let's look at several patterns in depth. Part of that look is recognizing the problem.
+For example, in our card game, we need to generate different decks, with different numbers of cards in them. A pattern exists that lets us do this.
+The solution provides the arrangement of classes and objects that make the pattern work. You may make changes to suit your application but still need to keep to the spirit of the pattern. For example, we will use a pattern for our deck generation. The pattern says nothing about generating playing card decks; but rather, a general-purpose way of generating objects of any kind. So we tailor the pattern to do just that.
+The consequences are what happens when you apply the pattern. Every pattern has at least one positive consequence. It solves the problem. But sometimes there may be negative consequences. Going back to the spare tire example, the size of the tire impacts your ability to carry other things in the trunk.
+
+There are three types of patterns:
+Creational
+Structural
+Behavioral
+
+Back in 1994, the Gang of Four (Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides)
+
+Creational Patterns
+Factory Pattern
+Prototype Pattern
+Builder Pattern
+
+There are two types of structural patterns
+ — those that organize classes and those that organize objects. We’ll look at both kinds.
+Adapter Pattern
+The problem this pattern addresses is when you have code that expects one interface (set of methods), but the implementation provides another. How do you get into this predicament? Usually, by incorporating a third-party library, after you have coded part of your system. The library does what you want, but the classes have named functions different than what you have coded for.
+You have a couple of options. One (the hard/bad one) is to go back and change all your existing code to use the new classes and methods. The other is to create an adapter. The adapter exposes the expected interface. But the implementation of each method turns around and calls the methods of the library class.
+
+
+
