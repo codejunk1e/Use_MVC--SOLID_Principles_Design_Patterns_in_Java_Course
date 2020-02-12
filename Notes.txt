@@ -140,4 +140,16 @@ The problem this pattern addresses is when you have code that expects one interf
 You have a couple of options. One (the hard/bad one) is to go back and change all your existing code to use the new classes and methods. The other is to create an adapter. The adapter exposes the expected interface. But the implementation of each method turns around and calls the methods of the library class.
 
 
+What is the State Pattern?
+In Java, you can’t dynamically add or modify methods to an object after it’s been created. But there are times when you want an object to behave differently as its state changes. One approach would be to add lots of ifs and switch statements. But that ends up with a mess of a design.
+Instead, you could add a new hierarchy of classes that encapsulate those different behaviors. The object the client is using then changes the back-end object as state changes, which is the state pattern.
+For example, I ask my son to get me a soda out of the fridge. Rather than doing it himself, he yells to his sister, who is in the kitchen. She selects one she knows I like, takes it out of the fridge, and tosses him the soda. My son then hands me a vanilla-orange cola.
+The next day, I again ask my son to get me a soda. This time a friend is in the kitchen. He yells to his friend who has no idea what I like, grabs a random one, and tosses it to my son. My son hands me a diet root beer. Yuck.
+From my perspective, my son is behaving differently (and not just in a teenager way). Yesterday, I got what I liked. Today, I did not. Yet my son did not change.
+
+
+The observer pattern allows a state change in one object to be acted upon by many dependencies.
+The strategy pattern allows for individual algorithms to be chosen for specific situations.
+The state pattern allows for system behavior to vary depending on the current situation.
+
 
