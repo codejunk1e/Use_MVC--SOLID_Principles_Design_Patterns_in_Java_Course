@@ -1,9 +1,7 @@
 package Controller;
 
 import Games.GameEvaluator;
-import Model.Deck;
-import Model.Player;
-import Model.PlayingCard;
+import Model.*;
 import View.GameViewable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +16,8 @@ public class GameController {
     }
 
     Deck deck ;
-    List<Player> players;
-    Player Winner;
+    List<IPlayer> IPlayers;
+    IPlayer Winner;
     GameViewable view;
     GameState gameState;
     GameEvaluator gameEvaluator;
@@ -27,7 +25,7 @@ public class GameController {
     public GameController(Deck deck, GameViewable view, GameEvaluator gameEvaluator) {
         this.deck = deck;
         this.view = view;
-        players = new ArrayList<>();
+        IPlayers = new ArrayList<>();
         gameState = GameState.AddingPlayers;
         this.view.setGameController(this);
     }
@@ -54,8 +52,8 @@ public class GameController {
 
     public  void  addingPlayers(String playerName) {
         if (gameState == GameState.AddingPlayers) {
-            players.add(new Player(playerName, null));
-            view.showPlayerName(players.size(), playerName);
+            IPlayers.add(new Player(playerName, null));
+            view.showPlayerName(IPlayers.size(), playerName);
         }
     }
 
@@ -63,10 +61,10 @@ public class GameController {
         if(gameState != GameState.CardsDealt){
         deck.shuffle();
         int playerIndex = 1;
-        for (Player player : players){
-            player.addCardToHand(deck.removeTopCard());
-                players.add(new Player(player.getName(), null));
-                view.showFacedownCardForPlayer(playerIndex++, player.getName());
+        for (IPlayer IPlayer : IPlayers){
+            IPlayer.addCardToHand(deck.removeTopCard());
+                IPlayers.add(new Player(IPlayer.getName(), null));
+                view.showFacedownCardForPlayer(playerIndex++, IPlayer.getName());
              }
         gameState = GameState.CardsDealt;
         }
@@ -74,10 +72,10 @@ public class GameController {
 
     public  void flipCards(){
         int playerIndex = 1;
-        for (Player player : players){
-            PlayingCard pc = player.getCard(0);
+        for (IPlayer IPlayer : IPlayers){
+            PlayingCard pc = IPlayer.getCard(0);
             pc.flip(true);
-            view.showCardForPlayer(playerIndex++, player.getName(), pc.getRank().toString(), pc.getSuite().toString());
+            view.showCardForPlayer(playerIndex++, IPlayer.getName(), pc.getRank().toString(), pc.getSuite().toString());
         }
 
         evaluateWinner();
@@ -96,7 +94,7 @@ public class GameController {
     }
 
     private void evaluateWinner() {
-        Winner = gameEvaluator.evaluateWinner(players);
+        Winner = new WinningPlayer(gameEvaluator.evaluateWinner(IPlayers));
     }
 
 }

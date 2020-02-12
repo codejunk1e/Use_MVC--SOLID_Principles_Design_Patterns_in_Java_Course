@@ -1,25 +1,25 @@
 package Games;
 
-import Model.Player;
+import Model.IPlayer;
 import Model.PlayingCard;
 
 import java.util.List;
 
 public class HighCardGameEvaluator implements GameEvaluator {
 
-    public  Player evaluateWinner(List<Player> players) {
+    public IPlayer evaluateWinner(List<IPlayer> IPlayers) {
 
-        Player bestplayer = null;
+        IPlayer bestplayer = null;
         int bestRank = -1;
         int bestSuite = -1;
 
-        for (Player player : players) {
+        for (IPlayer IPlayer : IPlayers) {
             boolean newBestPlayer = false;
 
             if (bestplayer == null) {
                 newBestPlayer = true;
             } else {
-                PlayingCard pc = player.getCard(0);
+                PlayingCard pc = IPlayer.getCard(0);
                 int thisRank = pc.getRank().value();
                 if (thisRank >= bestRank) {
                     if (thisRank > bestRank) {
@@ -37,8 +37,8 @@ public class HighCardGameEvaluator implements GameEvaluator {
             }
 
             if (newBestPlayer) {
-                bestplayer = player;
-                PlayingCard pc = player.getCard(0);
+                bestplayer = IPlayer;
+                PlayingCard pc = IPlayer.getCard(0);
                 bestRank = pc.getRank().value();
                 bestSuite = pc.getSuite().value();
             }

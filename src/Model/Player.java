@@ -1,6 +1,6 @@
 package Model;
 
-public class Player {
+public class Player implements IPlayer {
     String name;
     Hand hand;
 
@@ -25,5 +25,4 @@ public class Player {
     public PlayingCard removeCard(int index) {
         return hand.removeCard();
     }
-
 }
